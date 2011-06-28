@@ -1,0 +1,20 @@
+name: OrbitalStrike
+main: com.Lord.mcplug.orbitalstrike.OrbitalStrike
+version: Beta1.2
+commands:
+    orbitalstrike:
+        description: Displays info about this plugin.
+        usage: |
+            /<orbitalstrike>
+    firemission:
+        description: Calls in an orbital strike on the target location. Will request confirmation before firing.
+        usage: |
+            /<firemission> [radius] [type]
+    firesweep:
+        description: Calls in a series of orbital strikes in a line between two locations. Will request confirmation for both locations.
+        usage: |
+            /<firesweep> [radius] [type]
+    disregard:
+        description: Cancels a pending fire mission.
+        usage: |
+            /<disregard>
