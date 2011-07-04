@@ -11,6 +11,12 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import com.Lord.mcplug.orbitalstrike.advbeams.TestingBeam;
+import com.Lord.mcplug.orbitalstrike.beams.CircularPenetratingBeam;
+import com.Lord.mcplug.orbitalstrike.beams.SquareBeam;
+import com.Lord.mcplug.orbitalstrike.beams.SquarePenetratingBeam;
+import com.Lord.mcplug.orbitalstrike.beams.ThinPenetratingBeam;
+
 public class OSHandler {
 	private Random m_Random = new Random();
 	private Timer m_Timer = new Timer();
@@ -24,7 +30,8 @@ public class OSHandler {
 //		CLEAN_SQUARE,
 //		CLEAN_SQUARE_PENETRATING,
 //		CIRCULAR,
-		CIRCULAR_PENETRATING
+		CIRCULAR_PENETRATING,
+		TESTING
 	}
 	
 	public class Vec2D {
@@ -47,26 +54,29 @@ public class OSHandler {
 	}
 	
 	public class BeamLocation {
-		public BeamLocation(int x, int z, World world) {
+		public BeamLocation(int x, int y, int z, World world) {
 			this.x = x;
+			this.y = y;
 			this.z = z;
 			this.world = world;
 		}
 		public BeamLocation(Location loc) {
 			this.x = loc.getBlockX();
+			this.y = loc.getBlockY();
 			this.z = loc.getBlockZ();
 			this.world = loc.getWorld();
 		}
 		public BeamLocation(BeamLocation bloc) {
 			this.x = bloc.x;
+			this.y = bloc.y;
 			this.z = bloc.z;
 			this.world = bloc.world;
 		}
 		public String toString() {
-			return world.toString() + "(x:" + x + ",z:" + z + ")";
+			return world.toString() + this.toStringLocalized();
 		}
 		public String toStringLocalized() {
-			return "(x:" + x + ",z:" + z + ")";
+			return "(" + x + "," + y + "," + z + ")";
 		}
 		public Vec2D vector() {
 			return new Vec2D(x, z);
@@ -76,12 +86,13 @@ public class OSHandler {
 			this.z += z;
 		}
 		public int x;
+		public int y;
 		public int z;
 		public World world;
 	}
 	
-	public class BeamSetting {
-		public BeamSetting(int radius, BeamType beamType) {
+	public class BeamSettings {
+		public BeamSettings(int radius, BeamType beamType) {
 			this.radius = radius;
 			this.beamType = beamType;
 		}
@@ -118,7 +129,7 @@ public class OSHandler {
 		return (long)(OrbitalStrike.getConfig().getStaggeredPlacementDelay() * 1000);
 	}
 	
-	public void initiateOrbitalStrike(OSHandler.BeamLocation location, OSHandler.BeamSetting settings) {
+	public void initiateOrbitalStrike(OSHandler.BeamLocation location, OSHandler.BeamSettings settings) {
 		if (settings.radius > getMaxRadius())
 			settings.radius = getMaxRadius();
 		
@@ -136,7 +147,7 @@ public class OSHandler {
 			OrbitalStrike.sendMessage(itr.next(), "Splash at " + location.toStringLocalized() + " in " + ((getPlacementDelay() + getDetonationDelay()) / 1000.0f) + " seconds!");
 	}
 
-	public void initiateOrbitalSwath(OSHandler.BeamLocation startLoc, OSHandler.BeamLocation endLoc, OSHandler.BeamSetting settings) {
+	public void initiateOrbitalSwath(OSHandler.BeamLocation startLoc, OSHandler.BeamLocation endLoc, OSHandler.BeamSettings settings) {
 		if (!startLoc.world.equals(endLoc.world)) {
 			OrbitalStrike.logInfo("Error: Start and end location are in different worlds!", 1);
 			return;
@@ -211,7 +222,7 @@ public class OSHandler {
 			itr.next().remove();
 	}
 	
-	private int requestBeam(BeamLocation location, BeamSetting settings) {
+	private int requestBeam(BeamLocation location, BeamSettings settings) {
 		int key;
 		do {
 			key = m_Random.nextInt();
@@ -232,6 +243,8 @@ public class OSHandler {
 //			beam = new CircularBeam(location.x, location.z, location.world, settings.radius);
 		else if (settings.beamType == BeamType.CIRCULAR_PENETRATING)
 			beam = new CircularPenetratingBeam(location.x, location.z, location.world, settings.radius);
+		else if (settings.beamType == BeamType.TESTING)
+			beam = new TestingBeam(location.x, location.y, location.z, location.world, settings.radius, null);
 		else {
 			OrbitalStrike.logInfo("Error: Unrecognized beam type", 1);
 			return -1;

@@ -1,11 +1,14 @@
-package com.Lord.mcplug.orbitalstrike;
+package com.Lord.mcplug.orbitalstrike.beams;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-public class ThinPenetratingBeam extends Beam {
+import com.Lord.mcplug.orbitalstrike.BasicBeam;
+import com.Lord.mcplug.orbitalstrike.OrbitalStrike;
+
+public class ThinPenetratingBeam extends BasicBeam {
 
 	public ThinPenetratingBeam(int refX, int refZ, World world, int radius) {
 		super(refX, refZ, world, radius);

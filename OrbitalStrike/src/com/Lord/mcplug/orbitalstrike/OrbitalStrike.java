@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
-import com.Lord.mcplug.orbitalstrike.OSHandler.BeamSetting;
+import com.Lord.mcplug.orbitalstrike.OSHandler.BeamSettings;
 import com.Lord.mcplug.orbitalstrike.OSHandler.BeamType;
 
 public class OrbitalStrike extends JavaPlugin {
@@ -27,7 +27,7 @@ public class OrbitalStrike extends JavaPlugin {
 	private final OSEntityListener m_EntityListener = new OSEntityListener(this);
 	private HashMap<CommandSender, ActionState> m_CSActionStates = new HashMap<CommandSender, ActionState>();
 	private HashMap<CommandSender, Location> m_CSUnconfirmedLocations = new HashMap<CommandSender, Location>();
-	private HashMap<CommandSender, BeamSetting> m_CSBeamSettings = new HashMap<CommandSender, BeamSetting>();
+	private HashMap<CommandSender, BeamSettings> m_CSBeamSettings = new HashMap<CommandSender, BeamSettings>();
 	private HashMap<CommandSender, Location> m_CSUnconfirmedSwathStartLocations = new HashMap<CommandSender, Location>();
 	private HashMap<CommandSender, Location> m_CSUnconfirmedSwathEndLocations = new HashMap<CommandSender, Location>();
 	
@@ -232,7 +232,7 @@ public class OrbitalStrike extends JavaPlugin {
 			if (args.length >= 2)
 				beamType = parseBeamType(args[1]);
 		}
-		BeamSetting beamSetting = m_Handler.new BeamSetting(radius, beamType);
+		BeamSettings beamSetting = m_Handler.new BeamSettings(radius, beamType);
 		OrbitalStrike.sendMessage(player, beamSetting.toString());
 		
 		m_PlayerListener.listenTo(player);
@@ -252,7 +252,7 @@ public class OrbitalStrike extends JavaPlugin {
 			if (args.length >= 2)
 				beamType = parseBeamType(args[1]);
 		}
-		BeamSetting beamSetting = m_Handler.new BeamSetting(radius, beamType);
+		BeamSettings beamSetting = m_Handler.new BeamSettings(radius, beamType);
 		OrbitalStrike.sendMessage(player, beamSetting.toString());
 		
 		m_PlayerListener.listenTo(player);
@@ -304,6 +304,12 @@ public class OrbitalStrike extends JavaPlugin {
 	              OrbitalStrike.logInfo("Permission system not detected, defaulting to OP", 1);
 	          }
 	      }
+	}
+
+	private static OSStateHandler m_StateHandler;
+	
+	public static OSStateHandler getStateHandler() {
+		return m_StateHandler;
 	}
 
 	private static OSConfig m_Config;

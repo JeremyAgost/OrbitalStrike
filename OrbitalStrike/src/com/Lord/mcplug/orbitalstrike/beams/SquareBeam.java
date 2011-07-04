@@ -1,17 +1,17 @@
-package com.Lord.mcplug.orbitalstrike;
+package com.Lord.mcplug.orbitalstrike.beams;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-public class CleanSquareBeam extends Beam {
+import com.Lord.mcplug.orbitalstrike.BasicBeam;
+import com.Lord.mcplug.orbitalstrike.OrbitalStrike;
 
-	private World m_World; 
-	
-	public CleanSquareBeam(int refX, int refZ, World world, int radius) {
+public class SquareBeam extends BasicBeam {
+
+	public SquareBeam(int refX, int refZ, World world, int radius) {
 		super(refX, refZ, world, radius);
-		m_World = world;
 	}
 
 	@Override
@@ -27,16 +27,12 @@ public class CleanSquareBeam extends Beam {
 					if (curBlock.getType() != Material.AIR) break; //will only go down to the first thing it hits
 					if (x == refX - radius || x == refX + radius || z == refZ - radius || z == refZ + radius)
 						curBlock.setType(Material.DIAMOND_BLOCK);
+					else
+						curBlock.setType(Material.TNT);
+					
 					m_PlacedLocations.add(curBlock.getLocation());
 				}
 		return true;
 	}
 
-	public void detonate() {
-		if (canDetonate()) {
-			for (Location explosionLoc : m_PlacedLocations)
-				m_World.createExplosion(explosionLoc, 4.0f);	//Explosive force of TNT
-		}
-		super.detonate();
-	}
 }
